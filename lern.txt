@@ -1,0 +1,7 @@
+!important --> to over write css , properties over boostrap
+
+
+window.location.origin--> givers orgin url like https://facebook.com , http://127.0.0.1:5500/
+
+
+.video-wrap>*  --> select video-wrap class and applid {..} all properties

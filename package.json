@@ -1,0 +1,15 @@
+{
+  "name": "google_meet",
+  "version": "1.0.0",
+  "description": "This is the google meet clone build by using html,css,express js , jquery and socket io for realtime communication.",
+  "main": "index.js",
+  "scripts": {
+    "start":"node server"
+  },
+  "author": "Bhesh Raj Neupane",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.7.2"
+  }
+}
