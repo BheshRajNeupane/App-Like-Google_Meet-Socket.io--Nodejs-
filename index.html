@@ -14,6 +14,34 @@
     />
 
     <link rel="stylesheet" href="public/assets/css/style.css" />
+    
+    <!-- socket clint side cdn ;it takes to load the socket.io-client, which exposes an io global -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+        <!-- jquery srcipt load -->
+        <script src="public/Assets/js/jquery-3.4.1.min.js"></script>
+        <script src="public/Assets/js/app.js"> </script>
+        <script>
+            $(function(){
+                //1.Geeting parameters from URL , then get meeting ID
+                const urlParams = new URLSearchParams(window.location.search)
+                var meeting_id = urlParams.get('meetingID');
+              //2.Get user id and if not redirect to home page
+                var user_id=window.prompt("Enter your user id");
+        
+               if(!user_id || !meeting_id){
+                   alert("user id or meeting id is messing");
+                   window.location.href='./action.html';
+                   return;
+               }  
+               // 3 .else ,  redirect to  meetingConference 
+               $("#meetingContainer").show()
+
+
+               MyApp._init(user_id,meeting_id);
+               
+        
+            })
+        </script>
   </head>
 
   <body>
