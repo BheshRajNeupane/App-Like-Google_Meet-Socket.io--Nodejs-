@@ -12,7 +12,7 @@
 1. Group Audio Video Streaming
 2. Screen Sharing System
 3. Messaging System
-4. Participant Details
+4. Showing  Participant Details
 5.  File Sharing System
 6.  Meeting Recording System
 7.  and many more!
