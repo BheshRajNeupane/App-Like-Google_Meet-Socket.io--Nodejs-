@@ -49,13 +49,10 @@
       <div class="g-top text-light">
         <div class="top-remote-video-show-wrap d-flex">
              <!-- For showing particaipant video  with 75 width-->
-            <div id="meetingContainer" class="w-75 d-none">
-          <div class="call-wrap" style="background-color: black">
+          <div id="meetingContainer" style="display: none;flex-basis: 75%;">
+           <div class="call-wrap" style="background-color: black">
             <div
-              class="video-wrap"
-              id="divUsers"
-              style="display: flex; flex-wrap: wrap"
-            >
+              class="video-wrap"id="divUsers"style="display: flex; flex-wrap: wrap" >
             <!--  for Local Video : my video -->
               <div id="me" class="userbox display-center flex-column">
                 <h2 class="display-center" style="font-size: 14px"></h2>
@@ -72,12 +69,63 @@
                 <h2 class="display-center" style="font-size: 14px"></h2>
                 <div class="display-center">
                   <video autoplay muted></video>
-                  <audio autoplay controls muted style="display: none"></audio>
+                  <audio autoplay controls  style="display: none"></audio>
                 </div>
               </div>
             </div>
           </div>
         </div>
+        <!-- messaging section -->
+            <div class="g-right-details-wrap bg-light text-secondary h-100" style="flex-basis :25%; z-index: 1;">
+                <div class="meeting-heading-wrap d-flex justify-content-between align-items-center pr-3 pl-3" style="height:10vh;">
+                  <div class="meeting-heading font-weight-bold cursor-pointer">Meeting Details</div>
+                  <div class="meeting-heading-cross display-center ">
+                    <span class="material-icons">clear</span>
+                  </div>
+                </div>
+
+
+                <div class="people-chat-wrap d-flex justify-content-between align-items-center pr-3 pl-3 mr-3 ml-3" style="height:10vh;font-size: 14px;">
+                  <div class="people-heading display-center cursor-pointer">
+                    <div class="people-heading-icon display-center mr-1">
+                      <span class="material-icons">people</span>
+                    </div>
+                    <div class="people-heading-text display-center ">Particant
+                      <span class="participant-count">(1)</span>
+                    </div>
+                  </div>
+                  <div class="chat-heading d-flex  justify-content-around align-items-center cursor-pointer">
+                    <div class="chat-heading-icon display-center mr-1">
+                      <span class="material-icons">message</span>
+                    </div>
+                     <div class="chat-heading-text">Chat</div>
+
+
+
+                  </div>
+               
+               </div>
+               <div class="in-call-chat-wrap mr-3 ml-3 pl-3 pr-3" style="height: 10vh; font-size: 14px; height: 69vh; overflow-y: scroll;">
+                
+                <div class="in-call-chat-wrap-up" style="display:none !important;"></div>
+
+                <div class="chat-show-wrap text-secondary d-flex flex-column justify-content-between  h-100" style="font-size: 14px;">
+
+                  <div class="chat-message-show" id="messages"></div>
+                  <div class="chat-message-sent d-flex justify-content-between align-items-center" style="margin-bottom: 35px ;">
+                  <div class="chat-message-sent-input" style="width:85%">
+                    <input type="text" name="" class="chat-message-sent-input w-100" id="msgbox" placeholder="Send a message to everyone" style="border-bottom:1px solid teal ; border:none" >
+                </div>
+                 <div class="chat-message-sent-action display-center cursor-pointer" id="btnsend" style="color: teal ; "> <span class="material-icons">send</span> </div>
+                </div>
+
+
+                </div>
+              </div>
+
+
+            </div>
+        
         </div>
         <!-- For showing particaipant info and message option  with 25 width-->
         <div
@@ -113,19 +161,19 @@
         </div>
         <div class="bottom-middle d-flex justify-content-center align-items-center" style="height:10vh;">
             <div class="mic-toggle-wrap action-icon-style display-center mr-2 cursor-pointer" id="miceMuteUnmute">
-                <span class="material-icons " >mic_off</span>
+                <span class="material-icons " style="width:100%">mic_off</span>
             </div>
             <div class="end-call-wrap  action-icon-style display-center mr-2 cursor-ponter">
                   <span class="material-icons text-danger" >call</span>
             
             </div>
-            <div class="video-toggle-wrap action-icon-style display-center cursor-pointer">
-                <span class="material-icons " >videocam_off</span>
+            <div class="video-toggle-wrap action-icon-style display-center cursor-pointer" id="videoCamOnOff">
+                <span class="material-icons " style="width:100%">videocam_off</span>
             </div>
         </div>
         <!-- For screen shring and recording -->
         <div class="bottom-right d-flex justify-content-center align-items-center mr-3" style="height:10vh;">
-            <div class="present-now-wrap justify-content-center align-items-center d-flex flex-column mr-5 cursor-pointer"><span class="material-icons " >present_to_all</span>
+            <div class="present-now-wrap justify-content-center align-items-center d-flex flex-column mr-5 cursor-pointer" id="btnScreenShareOnOff"><span class="material-icons " >present_to_all</span>
                 <div>Present Now</div>
             </div>
        
