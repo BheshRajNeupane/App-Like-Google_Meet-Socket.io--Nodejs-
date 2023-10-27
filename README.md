@@ -1,6 +1,6 @@
 # My_Meeting_App
 
-# In this app, Peers can perform group audio video streaming, screen sharing, group messaging, see participant details, file sharing, and meeting recording with this web-based tool, which has capabilities like to Google Meet.
+ In this app, Peers can perform group audio video streaming, screen sharing, group messaging, see participant details, file sharing, and meeting recording with this web-based tool, which has capabilities like Google Meet.
 
 # Build by using :
  HTML            JavaScript   Node js(express)    peerjs  
