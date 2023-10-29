@@ -455,6 +455,19 @@ var MyApp = (function(){
 
        })
 
+       socket.on("showFileMessage" , (data)=>{
+        var time = new Date();
+        var lTime = time.toLocaleString("en-US" , {
+            hour: "numeric",
+            minute:"numeric",
+            hour12:true
+        });
+       var attachFileAreaForOther =  document.querySelector(".show-attach-file");
+       attachFileAreaForOther.innerHTML +="<div class='left-align' style='display:flex; align-items:center;'><img src='public/assets/images/other.jpg'style='height:40px; width:40px; ' class='caller-image circle'><div style='font-weight:600';margin:0 5px;'>"+data.username+"</div>:<div><a style='color:#007bff;'href='"+data.filePath+"' download>"+data.fileName+"</a></div></div><br/>"
+      
+
+       })
+
         socket.on("inform_me_about_other_user", function (other_users){
             var userNumber = other_users.length;
             var userNumb = userNumber + 1 ; //   +1 me;
@@ -676,7 +689,22 @@ var MyApp = (function(){
                  error: function(error){ 
                  console.log( "error" ,error)
                  }
-            })
+            });
+     
+           // sender :to see file details which are going to share 
+           var attachFileArea = document.querySelector(".show-attach-file");
+           var attachFileName = $("#customFile").val().split("\\").pop();//from local device
+           var attachFilePath = "public/attachment/"+meeting_id+"/"+attachFileName;
+           attachFileArea.innerHTML +="<div class='left-align' style='display:flex; align-items:center;'><img src='public/assets/images/other.jpg'style='height:40px; width:40px; ' class='caller-image circle'><div style='font-weight:600';margin:0 5px;'>"+user_id+"</div>:<div><a style='color:#007bff;'href='"+attachFilePath+"' download>"+attachFileName+"</a></div></div><br/>";
+           $("label.custom-file-label").text("");
+           
+           //
+           socket.emit("fileTranserToOther", {
+               username:user_id,
+               meetingid:meeting_id,
+               filePath:attachFilePath,
+               fileName:attachFileName
+           })
       })
 
 

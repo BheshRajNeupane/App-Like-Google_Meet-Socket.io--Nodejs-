@@ -53,19 +53,37 @@ io.on('connection',(socket)=>{
     });
     
   socket.on("sendMessage" ,(msg)=>{
-      console.log(msg);
       var mUser = userConnections.find((p)=> p.connectionId==socket.id);//sender
-      var meetingid= mUser.meeting_id;
-      var from = mUser.user_id;
-      var list = userConnections.filter((v)=> v.meeting_id == meetingid);
-      list.forEach((v)=>{
-            
-          socket.to(v.connectionId).emit("showChatMessage" ,{
-                 from:from,
-                 message:msg
-          } )
-      })
+      if(mUser){
+        var meetingid= mUser.meeting_id;
+        var from = mUser.user_id;
+        var list = userConnections.filter((v)=> v.meeting_id == meetingid);
+        list.forEach((v)=>{
+                
+            socket.to(v.connectionId).emit("showChatMessage" ,{
+                    from:from,
+                    message:msg
+            } )
+        })
+    }
+  });
 
+  socket.on("fileTranserToOther", (msg)=>{
+    var mUser = userConnections.find((p)=> p.connectionId==socket.id);//sender
+     if(mUser){ 
+        var meetingid= mUser.meeting_id;
+        var from = mUser.user_id;
+        var list = userConnections.filter((v)=> v.meeting_id == meetingid);
+        list.forEach((v)=>{
+            
+            socket.to(v.connectionId).emit("showFileMessage" ,{
+                username:msg.username,
+                meetingid: msg.meetingid,
+                filePath:msg.filePath,
+                fileName:msg.fileName,
+            } )
+        })
+   }
   })
 
     socket.on("disconnect", function(){
@@ -102,9 +120,9 @@ app.post('/attachimg'  ,(req,res)=>{
     //move an uploaded file to a specified destination on server.
     imageFile.mv( "public/attachment/"+data.meeting_id+"/"+fileName , function(error){
         if(error){
-            console.log("couldn't upload the image file, error" , error);
+            console.log("couldn't upload the  file, error" , error);
         }else{
-            console.log("Image file successfully uploaded");
+            console.log(" file successfully uploaded");
         }
     })
 
