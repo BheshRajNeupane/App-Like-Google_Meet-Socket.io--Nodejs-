@@ -1,8 +1,8 @@
 const express = require('express');
 const path = require('path');
 var app = express();
-
-
+const  fs = require('fs');
+const fileUpload = require('express-fileupload');
 const port = 3000;
 
 var server = app.listen(port , ()=>{
@@ -31,15 +31,14 @@ io.on('connection',(socket)=>{
                     user_id:data.displayName,
                     meeting_id:data.meetingid
                 })
-                // console.log(userConnections);
-                // console.log(other_user);
-
+        var userCount = userConnections.length;
                 //4. Inform all members of same room (group's members) about you    
                 other_users.forEach((user)=>{
                     socket.to(user.connectionId).emit("inform_others_about_me" ,{
                         other_users_id:data.displayName,
-                        connId:socket.id
-                        //this is my user_id and connId but i write other_user_id because for them my id is other id so.
+                        connId:socket.id,
+                        userNumber:userCount
+               
                     })    
                 })
             socket.emit("inform_me_about_other_user", other_users) ;
@@ -60,6 +59,7 @@ io.on('connection',(socket)=>{
       var from = mUser.user_id;
       var list = userConnections.filter((v)=> v.meeting_id == meetingid);
       list.forEach((v)=>{
+            
           socket.to(v.connectionId).emit("showChatMessage" ,{
                  from:from,
                  message:msg
@@ -75,12 +75,37 @@ io.on('connection',(socket)=>{
             );
             userConnections= userConnections.filter((p)=>p.connectionId != socket.id);
         var list =  userConnections.filter((p)=>p.meeting_id==disUser.meeting_id);
-        list.forEach((p)=>{
+        list.forEach((p)=>{       
+            var userNumberAfterUserLeave = userConnections.length;
             socket.to(p.connectionId).emit("inform_other_about_disconnected_user",{
-                connId:socket.id
+                connId:socket.id,
+                uNumber:userNumberAfterUserLeave
 
             });
         })
 
     })
+})
+
+app.use(fileUpload());
+
+app.post('/attachimg'  ,(req,res)=>{
+    var data = req.body;
+    var imageFile = req.files.zipfile;
+    var fileName = imageFile.name;
+        
+    var dir = "public/attachment/"+data.meeting_id+"/";
+    if(!fs.existsSync(dir)){
+        fs.mkdirSync(dir);
+      ;
+    }
+    //move an uploaded file to a specified destination on server.
+    imageFile.mv( "public/attachment/"+data.meeting_id+"/"+fileName , function(error){
+        if(error){
+            console.log("couldn't upload the image file, error" , error);
+        }else{
+            console.log("Image file successfully uploaded");
+        }
+    })
+
 })
