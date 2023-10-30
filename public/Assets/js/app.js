@@ -223,23 +223,18 @@ var AppProcess = (function(){
         var connection= new RTCPeerConnection(iceConfiguration);
     
         connection.onnegotiationneeded= async function(event){
-            console.log("connection negotiation" , connid);
             await setOffer(connid);
         }
         
         connection.onicecandidate = async function(event){//1
-            console.log("    onicecandidate   ......." , event);
-            console.log("   event.candidate ......." , event);
             if(event.candidate){
                 // to send ice candiate details to other peers  
                 serverProcess( JSON.stringify({icecandidate:event.candidate}), connid) 
             }
-        }
-        
+        } 
         // The ontrack event is triggered when remote media tracks are received.
         connection.ontrack =async function(event){
-
-            
+               
             if(!remote_vid_stream[connid]){
                 remote_vid_stream[connid]= new MediaStream();
             }
@@ -247,9 +242,7 @@ var AppProcess = (function(){
                 remote_aud_stream[connid]= new MediaStream();
             }
            
-
             if(event.track.kind=="video"){
-                console.log("Testing video!!!!!!!!");
                 //deleting previous video and adding new one
                 remote_vid_stream[connid]
                 .getVideoTracks()
@@ -272,16 +265,11 @@ var AppProcess = (function(){
                 remoteAudioPlayer.srcObject=null; 
                 remoteAudioPlayer.srcObject = remote_aud_stream[connid] ; //display new one
                 remoteAudioPlayer.load();
-            }
-
-              
+            }              
         }
       
-
         peers_connection_ids[connid] = connid;
         peers_connection[connid]= connection;
-
-        console.log("testing 2...!!!!!!!" ,video_st );
 
             if(
                 video_st==video_states.Camera||video_st==video_states.ScreenShare
@@ -296,11 +284,6 @@ var AppProcess = (function(){
 
     async function setOffer(connid){
         var connection = peers_connection[connid];
-        console.log("peers_connection coonid" , peers_connection[connid]);
-          for(var i=0; i<peers_connection.length; i++){
-        console.log("peers_connection[connid]" , peers_connection[i]);
-          }
-        console.log("conn insete offer" , connection);
         var offer = await connection.createOffer();
         await connection.setLocalDescription(offer);
         serverProcess(JSON.stringify({offer: connection.localDescription}), connid) 
@@ -317,14 +300,14 @@ var AppProcess = (function(){
         }else if(message.offer){
             if(!peers_connection[from_connid]){
               await setConnection(from_connid);
-              // ie peers_connection[from_connid]= connection;
+            ;
             }
 
             var answer = await peers_connection[from_connid].createAnswer();
             // Creating an RTCSessionDescription for an SDP answer
-           await peers_connection [from_connid].setRemoteDescription(new RTCSessionDescription(answer)); 
+           await peers_connection[from_connid].setRemoteDescription(new RTCSessionDescription(answer)); 
 
-         await peers_connection[from_connid].setLocalDescription(message.offer);
+        //  await peers_connection[from_connid].setLocalDescription(message.offer);
          serverProcess(
               JSON.stringify({
                   answer: answer
@@ -332,8 +315,7 @@ var AppProcess = (function(){
              from_connid);
 
         }else if(message.icecandidate){
-            console.log('mesaasge',message);
-            console.log('mesaasge tala peerr_conn',peers_connection[from_connid]);
+
             if(!peers_connection[from_connid]){
                 await setConnection(from_connid);
             }
