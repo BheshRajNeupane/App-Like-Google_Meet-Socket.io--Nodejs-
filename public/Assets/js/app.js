@@ -708,6 +708,72 @@ var MyApp = (function(){
       })
 
 
+      var mediaRecorder;
+      var chunks = [];
+    $(document).on("click" , ".option-icon" , function(){
+        $(".recording-show").toggle(300);
+    })
+    $(document).on("click" , ".start-record" , function(){
+        $(this).removeClass().addClass("stop-record btn-danger text-dark").text("Stop Recording");
+        startRecording();
+    })
+    $(document).on("click" , ".stop-record" , function(){
+        $(this).removeClass().addClass("start-record  text-danger  btn-md btn-dark").text("Start Recording");
+        mediaRecorder.stop();
+    })
+
+     
+
+     async function captureScreen(mediaContraints={
+         video:true
+     }){
+         const screenStream = await navigator.mediaDevices.getDisplayMedia(mediaContraints);
+         return screenStream;
+     }
+     async function captureAudio(mediaContraints={
+         video:false,
+         audio:true
+     }){
+         const audioStream = await navigator.mediaDevices.getUserMedia(mediaContraints);
+         return audioStream;
+     }
+
+    async function startRecording(){
+          const screenStream = await captureScreen();
+          const audioStream = await captureAudio();
+          const stream =  new MediaStream([...screenStream.getTracks() , ...audioStream.getTracks()]);
+
+         mediaRecorder = new MediaRecorder(stream);
+         mediaRecorder.start();
+         mediaRecorder.onstop = function(e){
+              var clipName = prompt("Enter a name for your recording");
+             stream.getTracks().forEach((track)=> track.stop());//stop streamming
+
+             // create a new Blob object 
+             const blob = new Blob(chunks,{
+                 type:"video/webm"
+             })
+             //  recorded  will be downloaded
+             const url = window.URL.createObjectURL(blob);
+             const a = document.createElement("a");
+             a.style.display = "none";
+             a.href = url;
+             a.download = clipName+".webm";
+             document.body.appendChild(a);
+             a.click();
+             setTimeout(()=>{
+                 document.body.removeChild(a);
+                 window.URL.revokeObjectURL(url);
+               } , 100);
+
+             
+            }
+          //store recorded audioVideo
+          mediaRecorder.ondataavailable = function(e){
+               chunks.push(e.data);
+          }
+
+    }
 
        
  return{
