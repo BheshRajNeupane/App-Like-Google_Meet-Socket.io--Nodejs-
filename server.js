@@ -3,7 +3,7 @@ const path = require('path');
 var app = express();
 const  fs = require('fs');
 const fileUpload = require('express-fileupload');
-const port = 3000;
+const port = 7400;
 
 var server = app.listen(port , ()=>{
     console.log("Listiening server at port ",port);

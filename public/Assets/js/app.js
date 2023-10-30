@@ -18,7 +18,7 @@ var AppProcess = (function(){
     var video_st = video_states.None; 
 
      async  function _init( SDP_function,my_connid)
-        {
+        {  
                serverProcess= SDP_function;
                my_connection_id=my_connid;
                eventProcess();
@@ -90,7 +90,6 @@ var AppProcess = (function(){
             connection.connectionState=="connecting"||
             connection.connectionState=="connected")
         ){
-
              return true;
         }else{
             return false;
@@ -99,11 +98,9 @@ var AppProcess = (function(){
     // function to  update  track(audio , video[ either by camera ,screenshare]) in webRTC
     
     async  function updateMediaSenders(track,rtp_senders){
-        console.log("inside updateMediaSenders0000000" ,peers_connection_ids);
          for(var con_id in peers_connection_ids){
-//peers_connection_ids.forEach((con_id) =>{
-    console.log("inside updateMediaSender insde forEach 1st")
              if( connection_status(peers_connection[con_id])){
+                 console.log("RTP",rtp_senders[con_id]);
                  if(rtp_senders[con_id] && rtp_senders[con_id].track){
                     console.log("inside updateMediaSenders111")
                     rtp_senders[con_id].replaceTrack(track);
@@ -223,30 +220,26 @@ var AppProcess = (function(){
  //console.log(iceConfiguration);
     async function setConnection(connid){
        
-        var connection= new RTCPeerConnection(iceConfiguration)
-         console.log("connection" , connection);
-
-        //  peers_connection_ids[connid] = connid;
-        // peers_connection[connid]= connection;
-        
+        var connection= new RTCPeerConnection(iceConfiguration);
+    
         connection.onnegotiationneeded= async function(event){
-            console.log("    setconnection onnegotiationneeded .......", event);
+            console.log("connection negotiation" , connid);
             await setOffer(connid);
         }
-        console.log("onnegotiationneeded" , connection.onnegotiationneeded());
-        connection.onicecandidate = async function(event){
-            console.log("    setconnection onicecandidate eceny  ......." , event);
-            console.log("   event.candidate ......." , event.candidate);
+        
+        connection.onicecandidate = async function(event){//1
+            console.log("    onicecandidate   ......." , event);
+            console.log("   event.candidate ......." , event);
             if(event.candidate){
-                // to send ice candiate details to other peers
+                // to send ice candiate details to other peers  
                 serverProcess( JSON.stringify({icecandidate:event.candidate}), connid) 
             }
         }
-        console.log("onicecandidate" , connection.onicecandidate());
+        
         // The ontrack event is triggered when remote media tracks are received.
         connection.ontrack =async function(event){
 
-            console.log("  inside on track  setconnection.......");
+            
             if(!remote_vid_stream[connid]){
                 remote_vid_stream[connid]= new MediaStream();
             }
@@ -254,10 +247,6 @@ var AppProcess = (function(){
                 remote_aud_stream[connid]= new MediaStream();
             }
            
-            console.log("taall",event , connid,remote_vid_stream[connid]);
-           ;
-            console.log("track kind",event.track.kind);
-            console.log("aashihs");
 
             if(event.track.kind=="video"){
                 console.log("Testing video!!!!!!!!");
@@ -287,7 +276,7 @@ var AppProcess = (function(){
 
               
         }
-        console.log("ontrack" , connection.ontrack());
+      
 
         peers_connection_ids[connid] = connid;
         peers_connection[connid]= connection;
@@ -403,7 +392,7 @@ var MyApp = (function(){
    var user_id="";
    var meeting_id="";
 
-   function init(uid,mid){
+   function _init(uid,mid){
         user_id=uid
         meeting_id=mid;
         $("#meetingContainer").show();
@@ -440,11 +429,8 @@ var MyApp = (function(){
         socket.on("inform_others_about_me",(data)=>{
             //2.Listen other user /members of group and add other user in meetingConference
               addUser(data.other_users_id, data.connId, data.userNumber);
-
              //3.Set  Video,Audio coonection with other users
-             console.log(" before setconnection.......");
-               AppProcess.setNewConnection(data.connId)
-               console.log(" after setconnection.......");
+               AppProcess.setNewConnection(data.connId)       
         })
 
        socket.on("inform_other_about_disconnected_user",function(data){
@@ -777,8 +763,9 @@ var MyApp = (function(){
 
        
  return{
-        _init:function(uid,mid){
-            init(uid,mid);
+        init:function(uid,mid){
+           
+            _init(uid,mid);
         }
     }      
 
