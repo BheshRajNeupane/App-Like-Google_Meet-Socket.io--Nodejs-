@@ -27,5 +27,5 @@ In WebRTC, the negotiation process typically involves a series of steps, which o
 4. Receiving the remote peer's answer.
 5. Setting the remote description with `setRemoteDescription()`.
 6. Exchanging ICE candidates with the remote peer.
-7. 
+   
 ![ICE Shared](https://github.com/BheshRajNeupane/My_Meeting_App/assets/108607897/94906cfc-b262-4809-aed8-8be44ac6293a)
